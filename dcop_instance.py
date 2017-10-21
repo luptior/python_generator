@@ -183,6 +183,47 @@ def create_json_instance(name, agts, vars, doms, cons, fileout=''):
         print(json.dumps(instance, indent=2))
 
 
+def create_maxsum_instance(name, agts, vars, doms, cons, fileout=''):
+    """
+    :param name: The name of the instance
+    :param agts: Dict of agents:
+        key: agt_name, val = null
+    :param vars: Dict of variables:
+        key: var_name,
+        vals: 'dom' = dom_name; 'agt' = agt_name
+    :param doms: Dict of domains:
+        key: dom_name,
+        val: array of values (integers)
+    :param cons: Dict of constraints:
+        key: con_name,
+        vals: 'arity' = int; 'def_cost' = int, values = list of dics {v: tuples, c: cost}
+    """
+    s = 'AGENT 1\n'
+    map_vidx = {}
+    for i, vname in enumerate(vars):
+        d = doms[vars[vname]['dom']]
+        map_vidx[vname] = i
+        
+        s += 'VARIABLE ' + str(i) + ' ' + str(d[0]) + ' ' + str(d[-1]) + '\n'
+
+    for i, cname in enumerate(cons):
+        c = cons[cname]
+        s += 'CONSTRAINT ' + str(i) + ' 1 '
+        for x in c['scope']:
+            s += str(map_vidx[x]) + ' '
+          #' '.join(str(map_vidx[x]) for x in c['scope']) + '\n'
+        s += '\n'
+
+        for v in c['values']:
+            s += 'F ' + ' '.join(str(t) for t in v['tuple']) + ' ' + str(v['cost']) + '\n'
+
+    if fileout:
+        with open(fileout, "w") as f:
+            f.write(s)
+    else:
+        print(s)
+
+
 def sanity_check(vars, cons):
     """ Check all variables participate in some constraint """
     v_con = []
@@ -206,6 +247,7 @@ if __name__ == '__main__':
                               {'tuple': [1, 0], 'cost': 5}, {'tuple': [1, 1], 'cost': 3}]}}
 
 
-    create_xml_instance("test", agts, vars, doms, cons)
-    create_wcsp_instance("test", agts, vars, doms, cons)
-    create_json_instance("test", agts, vars, doms, cons)
+    # create_xml_instance("test", agts, vars, doms, cons)
+    # create_wcsp_instance("test", agts, vars, doms, cons)
+    # create_json_instance("test", agts, vars, doms, cons)
+    create_maxsum_instance("test", agts, vars, doms, cons)

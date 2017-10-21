@@ -2,7 +2,6 @@ import numpy as np
 import commons as cm
 import sys, getopt, os
 
-
 def read_ccg(fname):
     with open(fname) as f:
         content = f.readlines()

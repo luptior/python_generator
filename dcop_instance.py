@@ -220,7 +220,7 @@ def create_maxsum_instance(name, agts, vars, doms, cons, fileout=''):
         s += '\n'
 
         for v in c['values']:
-            cost = v['cost'] if v['cost'] is not None else -9999
+            cost = v['cost'] if v['cost'] is not None else -9999999
             s += 'F ' + ' '.join(str(t) for t in v['tuple']) + ' ' + str(cost) + '\n'
 
     if fileout:

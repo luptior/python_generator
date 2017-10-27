@@ -41,19 +41,23 @@ def generate(G : nx.Graph, dsize = 2, p2=1.0, cost_range=(0, 10), def_cost = 0, 
 
 def main(argv):
     agts = 10
+    dsize = 2
+    p2 = 1.0
+    m = 5   # the number of random edges to add for each new node
+    t = 0.3 # Probability of adding a triangle after adding a random edge
     max_arity = 2
     max_cost = 10
     out_file = ''
     name = ''
     def rise_exception():
-        print('Input Error. Usage:\nmain.py -a -r -c -n -o <outputfile>')
+        print('Input Error. Usage:\nmain.py -a -m -t -l -r -c -n -o <outputfile>')
         sys.exit(2)
     try:
-        opts, args = getopt.getopt(argv, "a:r:c:n:o:h",
-                                   ["agts=", "max_arity=", "max_cost=", "name=", "ofile=", "help"])
+        opts, args = getopt.getopt(argv, "a:d:m:t:l:r:c:n:o:h",
+                                   ["agts=","doms=", "m=", "t=", "p2=", "max_arity=", "max_cost=", "name=", "ofile=", "help"])
     except getopt.GetoptError:
         rise_exception()
-    if len(opts) != 5:
+    if len(opts) != 8:
         rise_exception()
 
     for opt, arg in opts:
@@ -62,6 +66,14 @@ def main(argv):
             sys.exit()
         elif opt in ('-a', '--agts'):
             agts = int(arg)
+        elif opt in ('-d', '--doms'):
+            dsize = int(arg)
+        elif opt in ('-m', '--m'):
+            m = int(arg)
+        elif opt in ('-t', '--t'):
+            t = float(t)
+        elif opt in ('-l', '--p2'):
+            p2 = float(arg)
         elif opt in ('-r', '--max_arity'):
             max_arity = int(arg)
         elif opt in ('-c', '--max_cost'):
@@ -70,17 +82,18 @@ def main(argv):
             name = arg
         elif opt in ("-o", "--ofile"):
             out_file = arg
-    return agts, max_arity, max_cost, name, out_file
+
+    return agts, dsize, m, t, p2, max_arity, max_cost, name, out_file
 
 if __name__ == '__main__':
-    nagts, maxarity, maxcost, name, outfile = main(sys.argv[1:])
+    nagts, dsize, m, t, p2, maxarity, maxcost, name, outfile = main(sys.argv[1:])
 
-    G = nx.scale_free_graph(nagts).to_undirected()
-    # G = nx.powerlaw_cluster_graph(100, 50, 0.2)
+    #G = nx.scale_free_graph(nagts).to_undirected()
+    G = nx.powerlaw_cluster_graph(nagts, m, t)
     while not nx.is_connected(G):
         G = nx.scale_free_graph(nagts).to_undirected()
 
-    agts, vars, doms, cons = generate(G, cost_range=(0,maxcost))
+    agts, vars, doms, cons = generate(G, dsize=dsize, p2=p2, cost_range=(0,maxcost))
 
     print('Creating DCOP instance' + name, ' G nodes: ', len(G.nodes()), ' G edges:', len(G.edges()))
 

@@ -43,16 +43,17 @@ def generate(G : nx.Graph, dsize = 2, p2=1.0, cost_range=(0, 10), def_cost = 0, 
 def main(argv):
     agts = 10
     p2 = 1.0
+    dsize = 2
     max_arity = 2
     max_cost = 10
     out_file = ''
     name = ''
     def rise_exception():
-        print('Input Error. Usage:\nmain.py -a -l -r -c -n -o <outputfile>')
+        print('Input Error. Usage:\nmain.py -a -d -l -r -c -n -o <outputfile>')
         sys.exit(2)
     try:
-        opts, args = getopt.getopt(argv, "a:l:r:c:n:o:h",
-                                   ["agts=", "p2=", "max_arity=", "max_cost=", "name=", "ofile=", "help"])
+        opts, args = getopt.getopt(argv, "a:d:l:r:c:n:o:h",
+                                   ["agts=", "doms=", "p2=", "max_arity=", "max_cost=", "name=", "ofile=", "help"])
     except getopt.GetoptError:
         rise_exception()
     if len(opts) != 6:
@@ -64,6 +65,8 @@ def main(argv):
             sys.exit()
         elif opt in ('-a', '--agts'):
             agts = int(arg)
+        elif opt in ('-d', '--doms'):
+            dsize = int(arg)
         elif opt in ('-l', '--p2'):
             p2 = float(arg)
         elif opt in ('-r', '--max_arity'):
@@ -74,10 +77,10 @@ def main(argv):
             name = arg
         elif opt in ("-o", "--ofile"):
             out_file = arg
-    return agts, p2, max_arity, max_cost, name, out_file
+    return agts, dsize, p2, max_arity, max_cost, name, out_file
 
 if __name__ == '__main__':
-    nagts, p2, maxarity, maxcost, name, outfile = main(sys.argv[1:])
+    nagts, dsize, p2, maxarity, maxcost, name, outfile = main(sys.argv[1:])
 
     G = nx.grid_graph([nagts, nagts]).to_undirected()
     while not nx.is_connected(G):
@@ -93,7 +96,7 @@ if __name__ == '__main__':
     for e in G.edges():
         Gn.add_edge(map_nodes[e[0]], map_nodes[e[1]])
 
-    agts, vars, doms, cons = generate(Gn, p2=p2, cost_range=(0,maxcost))
+    agts, vars, doms, cons = generate(Gn, dsize=dsize, p2=p2, cost_range=(0,maxcost))
 
     print('Creating DCOP instance' + name, ' G nodes: ', len(Gn.nodes()), ' G edges:', len(Gn.edges()))
 

@@ -31,6 +31,8 @@ def create_xml_instance(name, agts, vars, doms, cons, fileout=''):
     def dump_rel(c_values):
         s = ''
         for i, t in enumerate(c_values):
+            if t['cost'] is None:
+                continue
             s += str(t['cost']) + ':'
             s += ' '.join(str(x) for x in t['tuple'])
             if i < len(c_values) -1 :
@@ -68,7 +70,7 @@ def create_xml_instance(name, agts, vars, doms, cons, fileout=''):
         ET.SubElement(xml_rels, 'relation', name='r'+cname, arity=str(cons[cname]['arity']),
                       nbTuples=str(len(cons[cname]['values'])),
                       semantics='soft',
-                      defaultCost=str(cons[cname]['def_cost'])
+                      defaultCost="infinity" #str(cons[cname]['def_cost'])
                       ).text = dump_rel(cons[cname]['values'])
 
         ET.SubElement(xml_cons, 'constraint', name='c'+cname, arity=str(cons[cname]['arity']),
@@ -129,7 +131,10 @@ def create_wcsp_instance(name, agts, vars, doms, cons, fileout=''):
         for v in c['values']:
             for vid in [x for x in v['tuple']]:
                 s+= str(vid) + ' '
-            s += str(v['cost']) + '\n'
+            if v['cost'] is not None:
+                s += str(v['cost'])  + '\n'
+            else:
+                s += 'infinity' + '\n'
             #s += ' '.join(str(vid) for vid in v['tuple']) + ' ' + str(v['cost']) + '\n'
 
     if fileout:
@@ -168,7 +173,7 @@ def create_json_instance(name, agts, vars, doms, cons, fileout=''):
         c = cons[cid]
         jcons['c'+cid] = {
             'scope': ['v'+vid for vid in c['scope']],
-            'vals': [x['cost'] for x in c['values']]
+            'vals': [x['cost'] if x['cost'] is not None else 'infinity' for x in c['values']]
         }
         for vid in c['scope']:
             jvars['v'+str(vid)]['cons'].append('c'+cid)
@@ -215,7 +220,8 @@ def create_maxsum_instance(name, agts, vars, doms, cons, fileout=''):
         s += '\n'
 
         for v in c['values']:
-            s += 'F ' + ' '.join(str(t) for t in v['tuple']) + ' ' + str(v['cost']) + '\n'
+            cost = v['cost'] if v['cost'] is not None else -9999
+            s += 'F ' + ' '.join(str(t) for t in v['tuple']) + ' ' + str(cost) + '\n'
 
     if fileout:
         with open(fileout, "w") as f:

@@ -5,12 +5,13 @@ import networkx as nx
 import sys, getopt
 import dcop_instance as dcop
 
-def generate(G : nx.Graph, dsize = 2, p2=1.0, cost_range=(0, 10), def_cost = 0, int_cost=True, outfile='') :
+def generate(G : nx.Graph, dsize = 2, p2=1.0, cost_range=(0, 10), def_cost = 0, int_cost=True, outfile=''):
     assert (0.0 < p2 <= 1.0)
     agts = {}
     vars = {}
     doms = {'0': list(range(0, dsize))}
     cons = {}
+    dset = list(range(0, dsize))
 
     for i in range(0, len(G.nodes())):
         agts[str(i)] = None
@@ -21,15 +22,20 @@ def generate(G : nx.Graph, dsize = 2, p2=1.0, cost_range=(0, 10), def_cost = 0, 
         arity = len(e)
         cons[str(cid)] = {'arity': arity, 'def_cost': def_cost, 'scope': [str(x) for x in e], 'values': []}
 
-        for assignments in itertools.product(*([[0, 1], ] * arity)):
+        n_C = len(dset) ** arity
+        n_forbidden_assignments = int((1-p2) * n_C)
+        forbidden_assignments = frozenset(random.sample(range(n_C), n_forbidden_assignments))
+        k = 0
+        for assignments in itertools.product(*([dset, ] * arity)):
             val = {'tuple': []}
             val['tuple'] = list(assignments)
             if int_cost:
-                val['cost'] = random.randint(*cost_range)
+                val['cost'] = random.randint(*cost_range) if k not in forbidden_assignments else None
             else:
-                val['cost'] = random.uniform(*cost_range)
+                val['cost'] = random.uniform(*cost_range) if k not in forbidden_assignments else None
             cons[str(cid)]['values'].append(val)
         cid += 1
+        k+=1
 
     return agts, vars, doms, cons
 

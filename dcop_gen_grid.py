@@ -11,6 +11,7 @@ def generate(G : nx.Graph, dsize = 2, p2=1.0, cost_range=(0, 10), def_cost = 0, 
     vars = {}
     doms = {'0': list(range(0, dsize))}
     cons = {}
+    dset = list(range(0, dsize))
 
     for i in range(0, len(G.nodes())):
         agts[str(i)] = None
@@ -21,33 +22,40 @@ def generate(G : nx.Graph, dsize = 2, p2=1.0, cost_range=(0, 10), def_cost = 0, 
         arity = len(e)
         cons[str(cid)] = {'arity': arity, 'def_cost': def_cost, 'scope': [str(x) for x in e], 'values': []}
 
-        for assignments in itertools.product(*([[0, 1], ] * arity)):
+        n_C = len(dset) ** arity
+        n_forbidden_assignments = int((1-p2) * n_C)
+        forbidden_assignments = frozenset(random.sample(range(n_C), n_forbidden_assignments))
+        k = 0
+        for assignments in itertools.product(*([dset, ] * arity)):
             val = {'tuple': []}
             val['tuple'] = list(assignments)
             if int_cost:
-                val['cost'] = random.randint(*cost_range)
+                val['cost'] = random.randint(*cost_range) if k not in forbidden_assignments else None
             else:
-                val['cost'] = random.uniform(*cost_range)
+                val['cost'] = random.uniform(*cost_range) if k not in forbidden_assignments else None
             cons[str(cid)]['values'].append(val)
+            k+=1
+
         cid += 1
 
     return agts, vars, doms, cons
 
 def main(argv):
     agts = 10
+    p2 = 1.0
     max_arity = 2
     max_cost = 10
     out_file = ''
     name = ''
     def rise_exception():
-        print('Input Error. Usage:\nmain.py -a -r -c -n -o <outputfile>')
+        print('Input Error. Usage:\nmain.py -a -l -r -c -n -o <outputfile>')
         sys.exit(2)
     try:
-        opts, args = getopt.getopt(argv, "a:r:c:n:o:h",
-                                   ["agts=", "max_arity=", "max_cost=", "name=", "ofile=", "help"])
+        opts, args = getopt.getopt(argv, "a:l:r:c:n:o:h",
+                                   ["agts=", "p2=", "max_arity=", "max_cost=", "name=", "ofile=", "help"])
     except getopt.GetoptError:
         rise_exception()
-    if len(opts) != 5:
+    if len(opts) != 6:
         rise_exception()
 
     for opt, arg in opts:
@@ -56,6 +64,8 @@ def main(argv):
             sys.exit()
         elif opt in ('-a', '--agts'):
             agts = int(arg)
+        elif opt in ('-l', '--p2'):
+            p2 = float(arg)
         elif opt in ('-r', '--max_arity'):
             max_arity = int(arg)
         elif opt in ('-c', '--max_cost'):
@@ -64,10 +74,10 @@ def main(argv):
             name = arg
         elif opt in ("-o", "--ofile"):
             out_file = arg
-    return agts, max_arity, max_cost, name, out_file
+    return agts, p2, max_arity, max_cost, name, out_file
 
 if __name__ == '__main__':
-    nagts, maxarity, maxcost, name, outfile = main(sys.argv[1:])
+    nagts, p2, maxarity, maxcost, name, outfile = main(sys.argv[1:])
 
     G = nx.grid_graph([nagts, nagts]).to_undirected()
     while not nx.is_connected(G):
@@ -83,7 +93,7 @@ if __name__ == '__main__':
     for e in G.edges():
         Gn.add_edge(map_nodes[e[0]], map_nodes[e[1]])
 
-    agts, vars, doms, cons = generate(Gn, cost_range=(0,maxcost))
+    agts, vars, doms, cons = generate(Gn, p2=p2, cost_range=(0,maxcost))
 
     print('Creating DCOP instance' + name, ' G nodes: ', len(Gn.nodes()), ' G edges:', len(Gn.edges()))
 

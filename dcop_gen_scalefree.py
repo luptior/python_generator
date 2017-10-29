@@ -6,8 +6,8 @@ import sys, getopt
 import dcop_instance as dcop
 
 
-def generate(G : nx.Graph, dsize = 2, p2=1.0, cost_range=(0, 10), def_cost = 0, int_cost=True, outfile=''):
-    assert (0.0 < p2 <= 1.0)
+def generate(G : nx.Graph, dsize = 2, p2=0.0, cost_range=(0, 10), def_cost = 0, int_cost=True, outfile=''):
+    assert (0.0 <= p2 < 1.0)
     agts = {}
     vars = {}
     doms = {'0': list(range(0, dsize))}
@@ -43,7 +43,7 @@ def generate(G : nx.Graph, dsize = 2, p2=1.0, cost_range=(0, 10), def_cost = 0, 
 def main(argv):
     agts = 10
     dsize = 2
-    p2 = 1.0
+    p2 = 0.0
     m = 5   # the number of random edges to add for each new node
     t = 0.3 # Probability of adding a triangle after adding a random edge
     max_arity = 2
@@ -58,7 +58,7 @@ def main(argv):
                                    ["agts=","doms=", "m=", "t=", "p2=", "max_arity=", "max_cost=", "name=", "ofile=", "help"])
     except getopt.GetoptError:
         rise_exception()
-    if len(opts) != 8:
+    if len(opts) != 9:
         rise_exception()
 
     for opt, arg in opts:
@@ -97,7 +97,7 @@ if __name__ == '__main__':
 
     agts, vars, doms, cons = generate(G, dsize=dsize, p2=p2, cost_range=(0,maxcost))
 
-    print('Creating DCOP instance' + name, ' G nodes: ', len(G.nodes()), ' G edges:', len(G.edges()))
+    print('Creating DCOP instance ' + name, ' G nodes: ', len(G.nodes()), ' G edges:', len(G.edges()))
 
     dcop.create_xml_instance(name, agts, vars, doms, cons, outfile+'.xml')
     dcop.create_wcsp_instance(name, agts, vars, doms, cons, outfile+'.wcsp')

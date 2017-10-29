@@ -1,13 +1,13 @@
-# Exampels
+# Examples
 
 ## Random Generator
-    dcop_gen_rand.py --agts 2 --doms 3 --p1 1.0 --p2 0.5 --max_arity 2 --max_cost 100 --name test --ofile test
+    python dcop_gen_rand.py --agts 50 --doms 10 --p1 1.0 --p2 0.5 --max_arity 2 --max_cost 100 --name test --ofile test
 
     Parameters:
     agts (int) – the number of nodes
     doms (int) – the size of the domains
-    p1 (float) – the constraint graph density (1 = fully connected, 0 = disconnected)
-    p2 (float) – the constraint tightness (1 = full soft , 0 = full hard)
+    p1 (float) – the constraint graph density (0 = disconnected, 1 = fully connected)
+    p2 (float) – the constraint tightness (0 = full soft, 1 = full hard)
     max_arity (int) – the maximum constraint arity
     max_cost (int) - the maximum cost of a constraint value
     name (str) the name of the instance
@@ -17,12 +17,12 @@
 
 
 ## Grid Generator
-    dcop_gen_grid.py --agts 2 --doms 3 --p2 0.5 --max_arity 2 --max_cost 100 --name test --ofile test
+    python dcop_gen_grid.py --agts 50 --doms 10 --p2 0.5 --max_arity 2 --max_cost 100 --name test --ofile test
 
     Parameters:
     agts (int) – the number of nodes along 1 side of the grid-graph
     doms (int) – the size of the domains
-    p2 (float) – the constraint tightness (1 = full soft , 0 = full hard)
+    p2 (float) – the constraint tightness (0 = full soft, 1 = full hard)
     max_arity (int) – the maximum constraint arity
     max_cost (int) - the maximum cost of a constraint value
     name (str) the name of the instance
@@ -34,14 +34,14 @@
 
 ## Scale-Free Generator
 
-    dcop_gen_grid.py --agts 2 --doms 3 --m 4 --t 0.3 --p2 0.5 --max_arity 2 --max_cost 100 --name test --ofile test
+    python dcop_gen_scalefree.py --agts 50 --doms 10 --m 4 --t 0.3 --p2 0.5 --max_arity 2 --max_cost 100 --name test --ofile test
 
     Parameters:
     agts (int) – the number of nodes
     doms (int) – the size of the domains
     m (int) – the number of random edges to add for each new node
     p (float) – Probability of adding a triangle after adding a random edge
-    p2 (float) – the constraint tightness (1 = full soft , 0 = full hard)
+    p2 (float) – the constraint tightness (0 = full hard, 1 = full soft)
     max_arity (int) – the maximum constraint arity
     max_cost (int) - the maximum cost of a constraint value
     name (str) the name of the instance
@@ -52,4 +52,3 @@
     quite low. The transitivity (fraction of triangles to possible triangles) seems to decrease with network size.
     It is essentially the Barabási–Albert (BA) growth model with an extra step that each random edge is followed by
     a chance of making an edge to one of its neighbors too (and thus a triangle).
-

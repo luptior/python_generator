@@ -7,7 +7,7 @@ import dcop_instance as dcop
 
 def generate(nagts, dsize, p1, p2, cost_range=(0, 10), max_arity=2, def_cost = 0, int_cost=True, outfile='') :
     assert (0.0 < p1 <= 1.0)
-    assert (0.0 < p2 <= 1.0)
+    assert (0.0 <= p2 < 1.0)
     agts = {}
     vars = {}
     doms = {'0': list(range(0, dsize))}
@@ -17,7 +17,7 @@ def generate(nagts, dsize, p1, p2, cost_range=(0, 10), max_arity=2, def_cost = 0
         agts[str(i)] = None
         vars[str(i)] = {'dom': '0', 'agt': str(i)}
 
-    ncons = int(p1 * ((nagts*(nagts-1)) / 2))    
+    ncons = int(p1 * ((nagts*(nagts-1)) / 2))
     constraint_set = set()
 
     consumed_constr = 0
@@ -59,7 +59,7 @@ def main(argv):
     agts = 0
     doms = 2
     p1 = 1.0
-    p2 = 1.0
+    p2 = 0.0
     max_arity = 2
     max_cost = 100
     out_file = ''
@@ -110,7 +110,7 @@ if __name__ == '__main__':
         print("sanity check failed!")
         exit(-1)
 
-    print('Creating DCOP instance' + name)
+    print('Creating DCOP instance ' + name)
     dcop.create_xml_instance(name, agts, vars, doms, cons, outfile+'.xml')
     dcop.create_wcsp_instance(name, agts, vars, doms, cons, outfile+'.wcsp')
     dcop.create_json_instance(name, agts, vars, doms, cons, outfile+'.json')

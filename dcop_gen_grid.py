@@ -5,8 +5,8 @@ import networkx as nx
 import sys, getopt
 import dcop_instance as dcop
 
-def generate(G : nx.Graph, dsize = 2, p2=1.0, cost_range=(0, 10), def_cost = 0, int_cost=True, outfile='') :
-    assert (0.0 < p2 <= 1.0)
+def generate(G : nx.Graph, dsize = 2, p2=0.0, cost_range=(0, 10), def_cost = 0, int_cost=True, outfile='') :
+    assert (0.0 <= p2 < 1.0)
     agts = {}
     vars = {}
     doms = {'0': list(range(0, dsize))}
@@ -42,7 +42,7 @@ def generate(G : nx.Graph, dsize = 2, p2=1.0, cost_range=(0, 10), def_cost = 0, 
 
 def main(argv):
     agts = 10
-    p2 = 1.0
+    p2 = 0.0
     dsize = 2
     max_arity = 2
     max_cost = 10
@@ -56,7 +56,7 @@ def main(argv):
                                    ["agts=", "doms=", "p2=", "max_arity=", "max_cost=", "name=", "ofile=", "help"])
     except getopt.GetoptError:
         rise_exception()
-    if len(opts) != 6:
+    if len(opts) != 7:
         rise_exception()
 
     for opt, arg in opts:
@@ -98,7 +98,7 @@ if __name__ == '__main__':
 
     agts, vars, doms, cons = generate(Gn, dsize=dsize, p2=p2, cost_range=(0,maxcost))
 
-    print('Creating DCOP instance' + name, ' G nodes: ', len(Gn.nodes()), ' G edges:', len(Gn.edges()))
+    print('Creating DCOP instance ' + name, ' G nodes: ', len(Gn.nodes()), ' G edges:', len(Gn.edges()))
 
     dcop.create_xml_instance(name, agts, vars, doms, cons, outfile+'.xml')
     dcop.create_wcsp_instance(name, agts, vars, doms, cons, outfile+'.wcsp')

@@ -5,6 +5,7 @@ import networkx as nx
 import sys, getopt
 import dcop_instance as dcop
 
+
 def generate(G : nx.Graph, dsize = 2, p2=1.0, cost_range=(0, 10), def_cost = 0, int_cost=True, outfile=''):
     assert (0.0 < p2 <= 1.0)
     agts = {}
@@ -23,7 +24,7 @@ def generate(G : nx.Graph, dsize = 2, p2=1.0, cost_range=(0, 10), def_cost = 0, 
         cons[str(cid)] = {'arity': arity, 'def_cost': def_cost, 'scope': [str(x) for x in e], 'values': []}
 
         n_C = len(dset) ** arity
-        n_forbidden_assignments = int((1-p2) * n_C)
+        n_forbidden_assignments = int(p2 * n_C)
         forbidden_assignments = frozenset(random.sample(range(n_C), n_forbidden_assignments))
         k = 0
         for assignments in itertools.product(*([dset, ] * arity)):
@@ -84,6 +85,7 @@ def main(argv):
             out_file = arg
 
     return agts, dsize, m, t, p2, max_arity, max_cost, name, out_file
+
 
 if __name__ == '__main__':
     nagts, dsize, m, t, p2, maxarity, maxcost, name, outfile = main(sys.argv[1:])

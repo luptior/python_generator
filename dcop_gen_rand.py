@@ -35,7 +35,7 @@ def generate(nagts, dsize, p1, p2, cost_range=(0, 10), max_arity=2, def_cost = 0
                           'scope': [str(x) for x in scope], 'values': []}
 
         n_C = len(dset) ** arity
-        n_forbidden_assignments = int((1-p2) * n_C)
+        n_forbidden_assignments = int(p2 * n_C)
         forbidden_assignments = frozenset(random.sample(range(n_C), n_forbidden_assignments))
         k = 0
         for assignments in itertools.product(*([dset, ] * arity)):

@@ -67,8 +67,9 @@ def create_xml_instance(name, agts, vars, doms, cons, fileout=''):
     xml_cons = ET.SubElement(root, 'constraints', nbConstraints=str(len(cons)))
 
     for cname in cons:
+        X = [x in cons[cname]['values'] if x is not None]
         ET.SubElement(xml_rels, 'relation', name='r'+cname, arity=str(cons[cname]['arity']),
-                      nbTuples=str(len(cons[cname]['values'])),
+                      nbTuples=str(len(X)),
                       semantics='soft',
                       defaultCost="infinity" #str(cons[cname]['def_cost'])
                       ).text = dump_rel(cons[cname]['values'])

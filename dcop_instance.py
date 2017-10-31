@@ -43,7 +43,7 @@ def create_xml_instance(name, agts, vars, doms, cons, fileout=''):
     ET.SubElement(root, 'presentation',
                 name=name,
                 maxConstraintArity= str(max([cons[cid]['arity'] for cid in cons])),
-                maximize="false",
+                maximize="true",
                 format="XCSP 2.1_FRODO")
 
     xml_agts = ET.SubElement(root, 'agents', nbAgents=str(len(agts)))
@@ -71,7 +71,7 @@ def create_xml_instance(name, agts, vars, doms, cons, fileout=''):
         ET.SubElement(xml_rels, 'relation', name='r'+cname, arity=str(cons[cname]['arity']),
                       nbTuples=str(len(X)),
                       semantics='soft',
-                      defaultCost="infinity" #str(cons[cname]['def_cost'])
+                      defaultCost="0" #str(cons[cname]['def_cost'])
                       ).text = dump_rel(cons[cname]['values'])
 
         ET.SubElement(xml_cons, 'constraint', name='c'+cname, arity=str(cons[cname]['arity']),
@@ -208,8 +208,7 @@ def create_maxsum_instance(name, agts, vars, doms, cons, fileout=''):
     map_vidx = {}
     for i, vname in enumerate(vars):
         d = doms[vars[vname]['dom']]
-        map_vidx[vname] = i
-        
+        map_vidx[vname] = i        
         s += 'VARIABLE ' + str(i) + ' ' + str(d[0])  + 1' ' + str(d[-1] + 1) + '\n'
 
     for i, cname in enumerate(cons):

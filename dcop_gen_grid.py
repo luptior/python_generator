@@ -34,7 +34,7 @@ def generate(G : nx.Graph, dsize = 2, p2=0.0, cost_range=(0, 10), def_cost = 0, 
             else:
                 val['cost'] = random.uniform(*cost_range) if k not in forbidden_assignments else None
             cons[str(cid)]['values'].append(val)
-            k+=1
+            k += 1
 
         cid += 1
 

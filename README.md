@@ -40,7 +40,7 @@
     agts (int) – the number of nodes
     doms (int) – the size of the domains
     m (int) – the number of random edges to add for each new node
-    p (float) – Probability of adding a triangle after adding a random edge
+    t (float) – Probability of adding a triangle after adding a random edge
     p2 (float) – the constraint tightness (0 = full hard, 1 = full soft)
     max_arity (int) – the maximum constraint arity
     max_cost (int) - the maximum cost of a constraint value

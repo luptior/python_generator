@@ -210,7 +210,7 @@ def create_maxsum_instance(name, agts, vars, doms, cons, fileout=''):
         d = doms[vars[vname]['dom']]
         map_vidx[vname] = i
         
-        s += 'VARIABLE ' + str(i) + ' ' + str(d[0]) + ' ' + str(d[-1]) + '\n'
+        s += 'VARIABLE ' + str(i) + ' ' + str(d[0])  + 1' ' + str(d[-1] + 1) + '\n'
 
     for i, cname in enumerate(cons):
         c = cons[cname]

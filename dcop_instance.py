@@ -48,18 +48,18 @@ def create_xml_instance(name, agts, vars, doms, cons, fileout=''):
 
     xml_agts = ET.SubElement(root, 'agents', nbAgents=str(len(agts)))
     for aname in agts:
-        ET.SubElement(xml_agts, 'agent', name='a'+aname)
+        ET.SubElement(xml_agts, 'agent', name='a_'+aname)
 
     xml_vars = ET.SubElement(root, 'variables', nbVariables=str(len(vars)))
     for vname in vars:
         ET.SubElement(xml_vars, 'variable',
-                      name='v'+vname,
+                      name='v_'+vname,
                       domain='d'+vars[vname]['dom'],
-                      agent='a'+vars[vname]['agt'])
+                      agent='a_'+vars[vname]['agt'])
 
     xml_doms = ET.SubElement(root, 'domains', nbDomains=str(len(doms)))
     for dname in doms:
-        ET.SubElement(xml_doms, 'domain', name='d'+dname, nbValues=str(len(doms[dname]))).text \
+        ET.SubElement(xml_doms, 'domain', name='d_'+dname, nbValues=str(len(doms[dname]))).text \
             = str(doms[dname][0]) + '..' + str(doms[dname][-1])
         # = ' '.join(str(x) for x in doms[dname])
 
@@ -68,15 +68,19 @@ def create_xml_instance(name, agts, vars, doms, cons, fileout=''):
 
     for cname in cons:
         X = [x for x in cons[cname]['values'] if x['cost'] is not None]
-        ET.SubElement(xml_rels, 'relation', name='r'+cname, arity=str(cons[cname]['arity']),
+        #r_3_1
+        r_name = 'r';
+        for e in cons[cname]['scope']:
+            r_name += '_' + str(e)
+        ET.SubElement(xml_rels, 'relation', name=r_name, arity=str(cons[cname]['arity']),
                       nbTuples=str(len(X)),
                       semantics='soft',
                       defaultCost="0" #str(cons[cname]['def_cost'])
                       ).text = dump_rel(cons[cname]['values'])
 
-        ET.SubElement(xml_cons, 'constraint', name='c'+cname, arity=str(cons[cname]['arity']),
-                      scope=' '.join('v'+str(e) for e in cons[cname]['scope']),
-                      reference='r'+cname)
+        ET.SubElement(xml_cons, 'constraint', name='c_'+cname, arity=str(cons[cname]['arity']),
+                      scope=' '.join('v_'+str(e) for e in cons[cname]['scope']),
+                      reference=r_name)
 
     tree = ET.ElementTree(root)
     if fileout:

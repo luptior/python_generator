@@ -54,12 +54,13 @@ def create_xml_instance(name, agts, vars, doms, cons, fileout=''):
     for vname in vars:
         ET.SubElement(xml_vars, 'variable',
                       name='v_'+vname,
-                      domain='d'+vars[vname]['dom'],
+                      domain='d', #+vars[vname]['dom'],
                       agent='a_'+vars[vname]['agt'])
 
     xml_doms = ET.SubElement(root, 'domains', nbDomains=str(len(doms)))
     for dname in doms:
-        ET.SubElement(xml_doms, 'domain', name='d_'+dname, nbValues=str(len(doms[dname]))).text \
+        ET.SubElement(xml_doms, 'domain', name='d',#+dname,
+                      nbValues=str(len(doms[dname]))).text \
             = str(doms[dname][0]) + '..' + str(doms[dname][-1])
         # = ' '.join(str(x) for x in doms[dname])
 

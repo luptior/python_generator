@@ -24,6 +24,7 @@ def create_xml_instance(name, agts, vars, doms, cons, fileout=''):
     def prettify(elem):
         """Return a pretty-printed XML string for the Element.
         """
+        #tree = ET.parse(pathToFile, OrderedXMLTreeBuilder())
         rough_string = ET.tostring(elem.getroot(), encoding='utf-8', method='xml')
         reparsed = md.parseString(rough_string)
         return reparsed.toprettyxml(indent="\t")
@@ -214,7 +215,7 @@ def create_maxsum_instance(name, agts, vars, doms, cons, fileout=''):
     for i, vname in enumerate(vars):
         d = doms[vars[vname]['dom']]
         map_vidx[vname] = i        
-        s += 'VARIABLE ' + str(i) + ' ' + str(d[0] + 1) + ' ' + str(d[-1] + 1) + '\n'
+        s += 'VARIABLE ' + str(i) + ' 1 ' + str(len(d)) + '\n'
 
     for i, cname in enumerate(cons):
         c = cons[cname]
@@ -226,13 +227,55 @@ def create_maxsum_instance(name, agts, vars, doms, cons, fileout=''):
 
         for v in c['values']:
             cost = v['cost'] if v['cost'] is not None else -9999999
-            s += 'F ' + ' '.join(str(t + 1) for t in v['tuple']) + ' ' + str(cost) + '\n'
+            s += 'F ' + ' '.join(str(t) for t in v['tuple']) + ' ' + str(cost) + '\n'
 
     if fileout:
         with open(fileout, "w") as f:
             f.write(s)
     else:
         print(s)
+
+
+def create_dalo_instance(name, agts, vars, doms, cons, fileout=''):
+    """
+    :param name: The name of the instance
+    :param agts: Dict of agents:
+        key: agt_name, val = null
+    :param vars: Dict of variables:
+        key: var_name,
+        vals: 'dom' = dom_name; 'agt' = agt_name
+    :param doms: Dict of domains:
+        key: dom_name,
+        val: array of values (integers)
+    :param cons: Dict of constraints:
+        key: con_name,
+        vals: 'arity' = int; 'def_cost' = int, values = list of dics {v: tuples, c: cost}
+    """
+    s = 'AGENT ' + str(len(agts)) + '\n'
+    map_vidx = {}
+    for i, vname in enumerate(vars):
+        d = doms[vars[vname]['dom']]
+        map_vidx[vname] = i
+        map_vidx[vname] = i
+        s += 'VARIABLE ' + str(i) + ' ' + str(i) + ' ' + str(len(d)) + '\n'
+
+    for i, cname in enumerate(cons):
+        c = cons[cname]
+        s += 'CONSTRAINT '
+        for x in c['scope']:
+            s += str(map_vidx[x]) + ' '
+        s += '\n'
+
+        for v in c['values']:
+            cost = v['cost'] if v['cost'] is not None else -9999999
+            s += 'F ' + ' '.join(str(t) for t in v['tuple']) + ' ' + str(cost) + '\n'
+
+    if fileout:
+        with open(fileout, "w") as f:
+            f.write(s)
+    else:
+        print(s)
+
 
 
 def sanity_check(vars, cons):
@@ -257,8 +300,8 @@ if __name__ == '__main__':
                    'values': [{'tuple': [0, 0], 'cost': 1}, {'tuple': [0, 1], 'cost': 2},
                               {'tuple': [1, 0], 'cost': 5}, {'tuple': [1, 1], 'cost': 3}]}}
 
-
     # create_xml_instance("test", agts, vars, doms, cons)
     # create_wcsp_instance("test", agts, vars, doms, cons)
     # create_json_instance("test", agts, vars, doms, cons)
     create_maxsum_instance("test", agts, vars, doms, cons)
+    create_dalo_instance("test", agts, vars, doms, cons)

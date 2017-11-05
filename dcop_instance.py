@@ -267,8 +267,9 @@ def create_dalo_instance(name, agts, vars, doms, cons, fileout=''):
         s += '\n'
 
         for v in c['values']:
-            cost = v['cost'] if v['cost'] is not None else -9999999
-            s += 'F ' + ' '.join(str(t) for t in v['tuple']) + ' ' + str(cost) + '\n'
+            if v['cost'] is not None:
+                cost = v['cost'] #if v['cost'] is not None else -9999999
+                s += 'F ' + ' '.join(str(t) for t in v['tuple']) + ' ' + str(cost) + '\n'
 
     if fileout:
         with open(fileout, "w") as f:

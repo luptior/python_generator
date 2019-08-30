@@ -1,7 +1,8 @@
 import xml.dom.minidom as md
 import xml.etree.ElementTree as ET
 import json
-from src import commons as cm
+
+import commons as cm
 
 
 def create_xml_instance(name, agts, vars, doms, cons, fileout=''):

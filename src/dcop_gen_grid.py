@@ -3,7 +3,8 @@ import itertools
 import json
 import networkx as nx
 import sys, getopt
-from src import dcop_instance as dcop
+
+import dcop_instance as dcop
 
 
 def generate(G : nx.Graph, dsize = 2, p2=0.0, cost_range=(0, 10), def_cost = 0, int_cost=True, outfile='') :

@@ -1,3 +1,10 @@
 .gitignore
 _pychache_
 *.pyc
+
+# generated files
+*.xml
+*.dalo
+*.wcsp
+*.maxsum
+*.json

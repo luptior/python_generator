@@ -3,7 +3,8 @@ import itertools
 import json
 from scipy.special import comb
 import sys, getopt, os
-from src import dcop_instance as dcop
+
+import dcop_instance as dcop
 
 
 def generate(nagts, dsize, p1, p2, cost_range=(0, 10), max_arity=2, def_cost = 0, int_cost=True, outfile='') :

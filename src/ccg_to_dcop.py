@@ -1,6 +1,7 @@
 import numpy as np
-from src import commons as cm
 import sys, getopt, os
+
+import commons as cm
 
 def read_ccg(fname):
     with open(fname) as f:

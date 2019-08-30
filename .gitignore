@@ -1,6 +1,7 @@
 .gitignore
 _pychache_
 *.pyc
+.DS_Store
 
 # generated files
 *.xml

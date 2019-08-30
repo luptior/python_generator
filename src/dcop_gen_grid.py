@@ -1,38 +1,27 @@
 import random
 import itertools
 import json
-from scipy.special import comb
-import sys, getopt, os
-import dcop_instance as dcop
+import networkx as nx
+import sys, getopt
+from src import dcop_instance as dcop
 
-def generate(nagts, dsize, p1, p2, cost_range=(0, 10), max_arity=2, def_cost = 0, int_cost=True, outfile='') :
-    assert (0.0 < p1 <= 1.0)
+
+def generate(G : nx.Graph, dsize = 2, p2=0.0, cost_range=(0, 10), def_cost = 0, int_cost=True, outfile='') :
     assert (0.0 <= p2 < 1.0)
     agts = {}
     vars = {}
     doms = {'0': list(range(0, dsize))}
     cons = {}
+    dset = list(range(0, dsize))
 
-    for i in range(0, nagts):
+    for i in range(0, len(G.nodes())):
         agts[str(i)] = None
         vars[str(i)] = {'dom': '0', 'agt': str(i)}
 
-    ncons = int(p1 * ((nagts*(nagts-1)) / 2))
-    constraint_set = set()
-
-    consumed_constr = 0
     cid = 0
-    dset = list(range(0, dsize))
-
-    while consumed_constr < ncons:
-        arity = random.randint(*(2, max_arity))
-        scope = frozenset(random.sample(range(nagts), arity))
-        # Don't duplicate.
-        if scope in constraint_set:
-            continue
-
-        cons[str(cid)] = {'arity': arity, 'def_cost': def_cost,
-                          'scope': [str(x) for x in scope], 'values': []}
+    for e in G.edges():
+        arity = len(e)
+        cons[str(cid)] = {'arity': arity, 'def_cost': def_cost, 'scope': [str(x) for x in e], 'values': []}
 
         n_C = len(dset) ** arity
         n_forbidden_assignments = int(p2 * n_C)
@@ -46,34 +35,29 @@ def generate(nagts, dsize, p1, p2, cost_range=(0, 10), max_arity=2, def_cost = 0
             else:
                 val['cost'] = random.uniform(*cost_range) if k not in forbidden_assignments else None
             cons[str(cid)]['values'].append(val)
-            k+=1
+            k += 1
 
-        constraint_set.add(scope)
-        consumed_constr += int(comb(arity, 2))
         cid += 1
 
     return agts, vars, doms, cons
 
-
 def main(argv):
-    agts = 0
-    doms = 2
-    p1 = 1.0
+    agts = 10
     p2 = 0.0
+    dsize = 2
     max_arity = 2
-    max_cost = 100
+    max_cost = 10
     out_file = ''
     name = ''
     def rise_exception():
-        print('Input Error. Usage:\nmain.py -a -d -p -l -r -c -n -o <outputfile>')
+        print('Input Error. Usage:\nmain.py -a -d -l -r -c -n -o <outputfile>')
         sys.exit(2)
     try:
-        opts, args = getopt.getopt(argv, "a:d:p:l:r:c:n:o:h",
-                                   ["agts=", "doms=", "p1=", "p2=", "max_arity=", "max_cost=",
-                                    "name=", "ofile=", "help"])
+        opts, args = getopt.getopt(argv, "a:d:l:r:c:n:o:h",
+                                   ["agts=", "doms=", "p2=", "max_arity=", "max_cost=", "name=", "ofile=", "help"])
     except getopt.GetoptError:
         rise_exception()
-    if len(opts) != 8:
+    if len(opts) != 7:
         rise_exception()
 
     for opt, arg in opts:
@@ -83,9 +67,7 @@ def main(argv):
         elif opt in ('-a', '--agts'):
             agts = int(arg)
         elif opt in ('-d', '--doms'):
-            doms = int(arg)
-        elif opt in ('-p', '--p1'):
-            p1 = float(arg)
+            dsize = int(arg)
         elif opt in ('-l', '--p2'):
             p2 = float(arg)
         elif opt in ('-r', '--max_arity'):
@@ -96,21 +78,29 @@ def main(argv):
             name = arg
         elif opt in ("-o", "--ofile"):
             out_file = arg
-    return agts, doms, p1, p2, max_arity, max_cost, name, out_file
-
+    return agts, dsize, p2, max_arity, max_cost, name, out_file
 
 if __name__ == '__main__':
-    nagts, dsize, p1, p2, maxarity, maxcost, name, outfile = main(sys.argv[1:])
+    nagts, dsize, p2, maxarity, maxcost, name, outfile = main(sys.argv[1:])
 
-    agts, vars, doms, cons = generate(nagts=nagts, dsize=dsize, p1=p1, p2=p2,
-                                      cost_range=(0,maxcost),
-                                      max_arity=maxarity, def_cost=0)
+    G = nx.grid_graph([nagts, nagts]).to_undirected()
+    while not nx.is_connected(G):
+        G = nx.grid_graph(nagts).to_undirected()
 
-    if not dcop.sanity_check(vars, cons):
-        print("sanity check failed!")
-        exit(-1)
+    # Normalize Graph
+    Gn = nx.empty_graph(nagts)
+    map_nodes = {}
+    nid = 0
+    for n in G.nodes():
+        map_nodes[n] = nid
+        nid += 1
+    for e in G.edges():
+        Gn.add_edge(map_nodes[e[0]], map_nodes[e[1]])
 
-    print('Creating DCOP instance ' + name)
+    agts, vars, doms, cons = generate(Gn, dsize=dsize, p2=p2, cost_range=(0,maxcost))
+
+    print('Creating DCOP instance ' + name, ' G nodes: ', len(Gn.nodes()), ' G edges:', len(Gn.edges()))
+
     dcop.create_xml_instance(name, agts, vars, doms, cons, outfile+'.xml')
     dcop.create_wcsp_instance(name, agts, vars, doms, cons, outfile+'.wcsp')
     dcop.create_json_instance(name, agts, vars, doms, cons, outfile+'.json')

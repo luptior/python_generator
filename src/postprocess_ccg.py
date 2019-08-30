@@ -1,5 +1,5 @@
 import numpy as np
-import commons as cm
+from src import commons as cm
 import sys, getopt, os
 
 def main(argv):

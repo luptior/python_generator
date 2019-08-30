@@ -1,0 +1,6 @@
+.gitignore
+*.pyc
+.idea
+.DS__Store
+
+data

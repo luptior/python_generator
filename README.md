@@ -1,8 +1,9 @@
 # Examples
 
 ## Random Generator
+```shell script
     python dcop_gen_rand.py --agts 50 --doms 10 --p1 1.0 --p2 0.5 --max_arity 2 --max_cost 100 --name test --ofile test
-
+```
     Parameters:
     agts (int) – the number of nodes
     doms (int) – the size of the domains
@@ -16,9 +17,12 @@
     Generates a Random instance according to the above parameters
 
 
-## Grid Generator
-    python dcop_gen_grid.py --agts 50 --doms 10 --p2 0.5 --max_arity 2 --max_cost 100 --name test --ofile test
 
+
+## Grid Generator
+```shell script
+    python dcop_gen_grid.py --agts 50 --doms 10 --p2 0.5 --max_arity 2 --max_cost 100 --name test --ofile test
+```
     Parameters:
     agts (int) – the number of nodes along 1 side of the grid-graph
     doms (int) – the size of the domains
@@ -33,9 +37,9 @@
 
 
 ## Scale-Free Generator
-
+```shell script
     python dcop_gen_scalefree.py --agts 50 --doms 10 --m 4 --t 0.3 --p2 0.5 --max_arity 2 --max_cost 100 --name test --ofile test
-
+```
     Parameters:
     agts (int) – the number of nodes
     doms (int) – the size of the domains

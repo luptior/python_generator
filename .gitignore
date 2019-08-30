@@ -2,6 +2,7 @@
 _pychache_
 *.pyc
 .DS_Store
+.idea
 
 # generated files
 *.xml

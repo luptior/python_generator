@@ -1,3 +1,5 @@
+output=data
+
 n_agents=10
 n_dom=10
 repo_size=10
@@ -9,7 +11,7 @@ repo_size=10
 
 for rep in $(seq 1 $repo_size); do
   for n_dom in 50 60; do
-    name="a"${n_agents}"_d"${doms}"_r"$rep
+    name=$output/"a"${n_agents}"_d"${n_dom}"_r"$rep
     python src/dcop_gen_rand.py --agts $n_agents \
                             --doms $n_dom \
                             --p1 $p1 \
@@ -21,7 +23,7 @@ for rep in $(seq 1 $repo_size); do
   done
 done
 
-rm *.dalo
-rm *.wcsp
-rm *.maxsum
-rm *.json
+rm $output/*.dalo
+rm $output/*.wcsp
+rm $output/*.maxsum
+rm $output/*.json

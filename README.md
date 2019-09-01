@@ -1,4 +1,5 @@
-# Examples
+# DCOP_generator
+Generates examples for DCOP algorithm testing
 
 ## Random Generator
 ```shell script

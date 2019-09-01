@@ -25,7 +25,7 @@ def create_xml_instance(name, agts, vars, doms, cons, fileout=''):
     def prettify(elem):
         """Return a pretty-printed XML string for the Element.
         """
-        #tree = ET.parse(pathToFile, OrderedXMLTreeBuilder())
+        # tree = ET.parse(pathToFile, OrderedXMLTreeBuilder())
         rough_string = ET.tostring(elem.getroot(), encoding='utf-8', method='xml')
         reparsed = md.parseString(rough_string)
         return reparsed.toprettyxml(indent="\t")
@@ -37,31 +37,31 @@ def create_xml_instance(name, agts, vars, doms, cons, fileout=''):
                 continue
             s += str(t['cost']) + ':'
             s += ' '.join(str(x) for x in t['tuple'])
-            if i < len(c_values) -1 :
+            if i < len(c_values) - 1:
                 s += ' |'
         return s
 
     root = ET.Element('instance')
     ET.SubElement(root, 'presentation',
-                name=name,
-                maxConstraintArity= str(max([cons[cid]['arity'] for cid in cons])),
-                maximize="true",
-                format="XCSP 2.1_FRODO")
+                  name=name,
+                  maxConstraintArity=str(max([cons[cid]['arity'] for cid in cons])),
+                  maximize="true",
+                  format="XCSP 2.1_FRODO")
 
     xml_agts = ET.SubElement(root, 'agents', nbAgents=str(len(agts)))
     for aname in agts:
-        ET.SubElement(xml_agts, 'agent', name='a_'+aname)
+        ET.SubElement(xml_agts, 'agent', name='a_' + aname)
 
     xml_vars = ET.SubElement(root, 'variables', nbVariables=str(len(vars)))
     for vname in vars:
         ET.SubElement(xml_vars, 'variable',
-                      name='v_'+vname,
-                      domain='d', #+vars[vname]['dom'],
-                      agent='a_'+vars[vname]['agt'])
+                      name='v_' + vname,
+                      domain='d',  # +vars[vname]['dom'],
+                      agent='a_' + vars[vname]['agt'])
 
     xml_doms = ET.SubElement(root, 'domains', nbDomains=str(len(doms)))
     for dname in doms:
-        ET.SubElement(xml_doms, 'domain', name='d',#+dname,
+        ET.SubElement(xml_doms, 'domain', name='d',  # +dname,
                       nbValues=str(len(doms[dname]))).text \
             = str(doms[dname][0]) + '..' + str(doms[dname][-1])
         # = ' '.join(str(x) for x in doms[dname])
@@ -71,18 +71,18 @@ def create_xml_instance(name, agts, vars, doms, cons, fileout=''):
 
     for cname in cons:
         X = [x for x in cons[cname]['values'] if x['cost'] is not None]
-        #r_3_1
+        # r_3_1
         r_name = 'r';
         for e in cons[cname]['scope']:
             r_name += '_' + str(e)
         ET.SubElement(xml_rels, 'relation', name=r_name, arity=str(cons[cname]['arity']),
                       nbTuples=str(len(X)),
                       semantics='soft',
-                      defaultCost="0" #str(cons[cname]['def_cost'])
+                      defaultCost="0"  # str(cons[cname]['def_cost'])
                       ).text = dump_rel(cons[cname]['values'])
 
-        ET.SubElement(xml_cons, 'constraint', name='c_'+cname, arity=str(cons[cname]['arity']),
-                      scope=' '.join('v_'+str(e) for e in cons[cname]['scope']),
+        ET.SubElement(xml_cons, 'constraint', name='c_' + cname, arity=str(cons[cname]['arity']),
+                      scope=' '.join('v_' + str(e) for e in cons[cname]['scope']),
                       reference=r_name)
 
     tree = ET.ElementTree(root)
@@ -127,9 +127,9 @@ def create_wcsp_instance(name, agts, vars, doms, cons, fileout=''):
         key: con_name,
         vals: 'arity' = int; 'def_cost' = int, values = list of dics {v: values, c: cost}
     """
-    max_d = max( [len(doms[d]) for d in doms])
+    max_d = max([len(doms[d]) for d in doms])
     s = name + ' ' + str(len(vars)) + ' ' + str(max_d) + ' ' + str(len(cons)) + ' 99999' + '\n'
-    s += ' '.join( str(len(doms[vars[vname]['dom']])) for vname in vars) + '\n'
+    s += ' '.join(str(len(doms[vars[vname]['dom']])) for vname in vars) + '\n'
     for cname in cons:
         c = cons[cname]
         s += str(c['arity']) + ' ' + \
@@ -138,12 +138,12 @@ def create_wcsp_instance(name, agts, vars, doms, cons, fileout=''):
              str(len(c['values'])) + '\n'
         for v in c['values']:
             for vid in [x for x in v['tuple']]:
-                s+= str(vid) + ' '
+                s += str(vid) + ' '
             if v['cost'] is not None:
-                s += str(v['cost'])  + '\n'
+                s += str(v['cost']) + '\n'
             else:
                 s += 'infinity' + '\n'
-            #s += ' '.join(str(vid) for vid in v['tuple']) + ' ' + str(v['cost']) + '\n'
+            # s += ' '.join(str(vid) for vid in v['tuple']) + ' ' + str(v['cost']) + '\n'
 
     if fileout:
         with open(fileout, "w") as f:
@@ -164,32 +164,32 @@ def create_json_instance(name, agts, vars, doms, cons, fileout=''):
         v = vars[vid]
         d = doms[v['dom']]
         aid = v['agt']
-        jvars['v'+vid] = {
+        jvars['v' + vid] = {
             'value': None,
             'domain': d,
-            'agent': 'a'+str(aid),
+            'agent': 'a' + str(aid),
             'type': 1,
             'id': int(vid),
             'cons': []
         }
 
     for aid in agts:
-        jagts['a'+aid] = {'vars': ['v'+vid for vid in vars if vars[vid]['agt'] == aid]}
+        jagts['a' + aid] = {'vars': ['v' + vid for vid in vars if vars[vid]['agt'] == aid]}
         jagts['id'] = int(aid)
 
     for cid in cons:
         c = cons[cid]
-        jcons['c'+cid] = {
-            'scope': ['v'+vid for vid in c['scope']],
+        jcons['c' + cid] = {
+            'scope': ['v' + vid for vid in c['scope']],
             'vals': [x['cost'] if x['cost'] is not None else 'infinity' for x in c['values']]
         }
         for vid in c['scope']:
-            jvars['v'+str(vid)]['cons'].append('c'+cid)
+            jvars['v' + str(vid)]['cons'].append('c' + cid)
 
     instance = {'variables': jvars, 'agents': jagts, 'constraints': jcons}
 
     if fileout:
-        #cm.save_json_file(fileout, instance)
+        # cm.save_json_file(fileout, instance)
         with open(fileout, 'w') as outfile:
             json.dump(instance, outfile, indent=2)
     else:
@@ -215,7 +215,7 @@ def create_maxsum_instance(name, agts, vars, doms, cons, fileout=''):
     map_vidx = {}
     for i, vname in enumerate(vars):
         d = doms[vars[vname]['dom']]
-        map_vidx[vname] = i        
+        map_vidx[vname] = i
         s += 'VARIABLE ' + str(i) + ' 1 ' + str(len(d)) + '\n'
 
     for i, cname in enumerate(cons):
@@ -223,7 +223,7 @@ def create_maxsum_instance(name, agts, vars, doms, cons, fileout=''):
         s += 'CONSTRAINT ' + str(i) + ' 1 '
         for x in c['scope']:
             s += str(map_vidx[x]) + ' '
-          #' '.join(str(map_vidx[x]) for x in c['scope']) + '\n'
+        # ' '.join(str(map_vidx[x]) for x in c['scope']) + '\n'
         s += '\n'
 
         for v in c['values']:
@@ -269,7 +269,7 @@ def create_dalo_instance(name, agts, vars, doms, cons, fileout=''):
 
         for v in c['values']:
             if v['cost'] is not None:
-                cost = v['cost'] #if v['cost'] is not None else -9999999
+                cost = v['cost']  # if v['cost'] is not None else -9999999
                 s += 'F ' + ' '.join(str(t) for t in v['tuple']) + ' ' + str(cost) + '\n'
 
     if fileout:
@@ -279,14 +279,13 @@ def create_dalo_instance(name, agts, vars, doms, cons, fileout=''):
         print(s)
 
 
-
 def sanity_check(vars, cons):
     """ Check all variables participate in some constraint """
     v_con = []
     for c in cons:
         for x in cons[c]['scope']:
             if x not in v_con:
-               v_con.append(x)
+                v_con.append(x)
     for v in vars:
         if v not in v_con:
             return False
@@ -299,8 +298,8 @@ if __name__ == '__main__':
             '2': {'dom': '1', 'agt': '1'}}
     doms = {'1': [0, 1]}
     cons = {'1': {'arity': 2, 'def_cost': 0, 'scope': ['1', '2'],
-                   'values': [{'tuple': [0, 0], 'cost': 1}, {'tuple': [0, 1], 'cost': 2},
-                              {'tuple': [1, 0], 'cost': 5}, {'tuple': [1, 1], 'cost': 3}]}}
+                  'values': [{'tuple': [0, 0], 'cost': 1}, {'tuple': [0, 1], 'cost': 2},
+                             {'tuple': [1, 0], 'cost': 5}, {'tuple': [1, 1], 'cost': 3}]}}
 
     # create_xml_instance("test", agts, vars, doms, cons)
     # create_wcsp_instance("test", agts, vars, doms, cons)

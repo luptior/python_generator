@@ -3,11 +3,13 @@ import sys, getopt, os
 
 import commons as cm
 
+
 def main(argv):
     in_file = ''
     ccg_file = ''
     out_file = ''
     s_file = ''
+
     def rise_exception():
         print('main.py -i <input-json> -c <input-ccg-json> -s <input_stats> -o <outputfile>')
         sys.exit(2)
@@ -62,4 +64,4 @@ if __name__ == '__main__':
             cost += get_cost(wcsp['constraints'][cname], stats, i)
         if cost < best_cost:
             best_cost = cost
-            print (i, best_cost, stats['simTime'][i], stats['netLoad'][i], sep=',')
+            print(i, best_cost, stats['simTime'][i], stats['netLoad'][i], sep=',')

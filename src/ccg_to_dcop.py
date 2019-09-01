@@ -3,6 +3,7 @@ import sys, getopt, os
 
 import commons as cm
 
+
 def read_ccg(fname):
     with open(fname) as f:
         content = f.readlines()
@@ -50,7 +51,6 @@ def is_in_kernel(var):
 
 
 def make_wcsp(vars, edges):
-
     def is_decision_var(v):
         return vars[v]['type'] == 0
 
@@ -93,7 +93,6 @@ def make_wcsp(vars, edges):
                 rm_edge(c)
             del vars[v]
 
-
     unary = {}
     edges_to_remove = []
     vars_to_remove = []
@@ -101,14 +100,14 @@ def make_wcsp(vars, edges):
     for vi in vars:
         vi_val = vars[vi]['val']
         # add agent
-        vars[vi]['agt'] = 'a' + str(vi)  if is_decision_var(vi) else None
+        vars[vi]['agt'] = 'a' + str(vi) if is_decision_var(vi) else None
 
         # If vi's value was set (NOT IN THE KERNEL)
         if not is_in_kernel(vars[vi]):
             # For each binary constraint c involving vi and some vj in the KERNEL,
             # transform c into a unary constraint.
             for cidx in vars[vi]['con']:
-                
+
                 vj = get_other_var(cidx, vi)
                 vj_val = vars[vj]['val']
 
@@ -156,7 +155,6 @@ def make_wcsp(vars, edges):
         rm_edge(c)
     #########################
 
-
     for v in vars:
         if v in unary:
             unary[v][1] += vars[v]['weight']
@@ -175,29 +173,29 @@ def make_wcsp(vars, edges):
         wcsp['variables']['v' + str(v)] = {
             'id': vars[v]['id'],
             'domain': [0, 1],
-            'agent' : vars[v]['agt'], #''a' + str(v) if vars[v]['type'] >= 0 else None,
-            'value' : None,
-            'type'  : vars[v]['type'],
-            'cons'  : []
+            'agent': vars[v]['agt'],  # ''a' + str(v) if vars[v]['type'] >= 0 else None,
+            'value': None,
+            'type': vars[v]['type'],
+            'cons': []
         }
     for v in assigned_vars:
-        wcsp['assigned_vars']['v' +str(v)] = assigned_vars[v]
+        wcsp['assigned_vars']['v' + str(v)] = assigned_vars[v]
 
     c_id = 0
     for u in unary:
-        vname = 'v'+str(u)
-        cname = 'c'+str(c_id)
-        wcsp['constraints'][cname] = {'scope': [vname], 'vals' : unary[u]}
+        vname = 'v' + str(u)
+        cname = 'c' + str(c_id)
+        wcsp['constraints'][cname] = {'scope': [vname], 'vals': unary[u]}
         wcsp['variables'][vname]['cons'].append(cname)
         c_id += 1
 
     for b in binary:
-        v1name, v2name = 'v'+str(edges[b][0]), 'v'+str(edges[b][1])
-        cname = 'c'+str(c_id)
+        v1name, v2name = 'v' + str(edges[b][0]), 'v' + str(edges[b][1])
+        cname = 'c' + str(c_id)
         wcsp['constraints'][cname] = {'scope': [v1name, v2name], 'vals': binary[b]}
         wcsp['variables'][v1name]['cons'].append(cname)
         wcsp['variables'][v2name]['cons'].append(cname)
-        c_id+=1
+        c_id += 1
 
     return wcsp
 
@@ -249,7 +247,6 @@ def make_dcop(wcsp):
     #                     break
     #         assert(min_vname is not None and wcsp['variables'][min_vname]['agent'] is not None)
 
-
     wcsp['agents'] = {}
     aid = 0
     for v in wcsp['variables']:
@@ -271,6 +268,7 @@ def make_dcop(wcsp):
 def main(argv):
     in_file = ''
     out_file = ''
+
     def rise_exception():
         print('main.py -i <input> -o <outputfile>')
         sys.exit(2)
@@ -309,5 +307,6 @@ if __name__ == '__main__':
         exit(1)
     else:
         dcop = make_dcop(wcsp)
-        print('saving dcop: agents=', len(dcop['agents']), ' variables=', len(dcop['variables']), ' constraints=', len(dcop['constraints']))
+        print('saving dcop: agents=', len(dcop['agents']), ' variables=', len(dcop['variables']), ' constraints=',
+              len(dcop['constraints']))
         cm.save_json_file(outfile, dcop)

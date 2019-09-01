@@ -7,7 +7,7 @@ import sys, getopt
 import dcop_instance as dcop
 
 
-def generate(G : nx.Graph, dsize = 2, p2=0.0, cost_range=(0, 10), def_cost = 0, int_cost=True, outfile='') :
+def generate(G: nx.Graph, dsize=2, p2=0.0, cost_range=(0, 10), def_cost=0, int_cost=True, outfile=''):
     assert (0.0 <= p2 < 1.0)
     agts = {}
     vars = {}
@@ -42,6 +42,7 @@ def generate(G : nx.Graph, dsize = 2, p2=0.0, cost_range=(0, 10), def_cost = 0, 
 
     return agts, vars, doms, cons
 
+
 def main(argv):
     agts = 10
     p2 = 0.0
@@ -50,9 +51,11 @@ def main(argv):
     max_cost = 10
     out_file = ''
     name = ''
+
     def rise_exception():
         print('Input Error. Usage:\nmain.py -a -d -l -r -c -n -o <outputfile>')
         sys.exit(2)
+
     try:
         opts, args = getopt.getopt(argv, "a:d:l:r:c:n:o:h",
                                    ["agts=", "doms=", "p2=", "max_arity=", "max_cost=", "name=", "ofile=", "help"])
@@ -81,6 +84,7 @@ def main(argv):
             out_file = arg
     return agts, dsize, p2, max_arity, max_cost, name, out_file
 
+
 if __name__ == '__main__':
     nagts, dsize, p2, maxarity, maxcost, name, outfile = main(sys.argv[1:])
 
@@ -98,12 +102,12 @@ if __name__ == '__main__':
     for e in G.edges():
         Gn.add_edge(map_nodes[e[0]], map_nodes[e[1]])
 
-    agts, vars, doms, cons = generate(Gn, dsize=dsize, p2=p2, cost_range=(0,maxcost))
+    agts, vars, doms, cons = generate(Gn, dsize=dsize, p2=p2, cost_range=(0, maxcost))
 
     print('Creating DCOP instance ' + name, ' G nodes: ', len(Gn.nodes()), ' G edges:', len(Gn.edges()))
 
-    dcop.create_xml_instance(name, agts, vars, doms, cons, outfile+'.xml')
-    dcop.create_wcsp_instance(name, agts, vars, doms, cons, outfile+'.wcsp')
-    dcop.create_json_instance(name, agts, vars, doms, cons, outfile+'.json')
-    dcop.create_maxsum_instance(name, agts, vars, doms, cons, outfile+'.maxsum')
-    dcop.create_dalo_instance(name, agts, vars, doms, cons, outfile+'.dalo')
+    dcop.create_xml_instance(name, agts, vars, doms, cons, outfile + '.xml')
+    dcop.create_wcsp_instance(name, agts, vars, doms, cons, outfile + '.wcsp')
+    dcop.create_json_instance(name, agts, vars, doms, cons, outfile + '.json')
+    dcop.create_maxsum_instance(name, agts, vars, doms, cons, outfile + '.maxsum')
+    dcop.create_dalo_instance(name, agts, vars, doms, cons, outfile + '.dalo')

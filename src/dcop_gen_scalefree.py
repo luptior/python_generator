@@ -7,7 +7,7 @@ import sys, getopt
 import dcop_instance as dcop
 
 
-def generate(G : nx.Graph, dsize = 2, p2=0.0, cost_range=(0, 10), def_cost = 0, int_cost=True, outfile=''):
+def generate(G: nx.Graph, dsize=2, p2=0.0, cost_range=(0, 10), def_cost=0, int_cost=True, outfile=''):
     assert (0.0 <= p2 < 1.0)
     agts = {}
     vars = {}
@@ -42,22 +42,26 @@ def generate(G : nx.Graph, dsize = 2, p2=0.0, cost_range=(0, 10), def_cost = 0, 
 
     return agts, vars, doms, cons
 
+
 def main(argv):
     agts = 10
     dsize = 2
     p2 = 0.0
-    m = 5   # the number of random edges to add for each new node
-    t = 0.3 # Probability of adding a triangle after adding a random edge
+    m = 5  # the number of random edges to add for each new node
+    t = 0.3  # Probability of adding a triangle after adding a random edge
     max_arity = 2
     max_cost = 10
     out_file = ''
     name = ''
+
     def rise_exception():
         print('Input Error. Usage:\nmain.py -a -m -t -l -r -c -n -o <outputfile>')
         sys.exit(2)
+
     try:
         opts, args = getopt.getopt(argv, "a:d:m:t:l:r:c:n:o:h",
-                                   ["agts=","doms=", "m=", "t=", "p2=", "max_arity=", "max_cost=", "name=", "ofile=", "help"])
+                                   ["agts=", "doms=", "m=", "t=", "p2=", "max_arity=", "max_cost=", "name=", "ofile=",
+                                    "help"])
     except getopt.GetoptError:
         rise_exception()
     if len(opts) != 9:
@@ -92,17 +96,17 @@ def main(argv):
 if __name__ == '__main__':
     nagts, dsize, m, t, p2, maxarity, maxcost, name, outfile = main(sys.argv[1:])
 
-    #G = nx.scale_free_graph(nagts).to_undirected()
+    # G = nx.scale_free_graph(nagts).to_undirected()
     G = nx.powerlaw_cluster_graph(nagts, m, t)
     while not nx.is_connected(G):
         G = nx.scale_free_graph(nagts).to_undirected()
 
-    agts, vars, doms, cons = generate(G, dsize=dsize, p2=p2, cost_range=(0,maxcost))
+    agts, vars, doms, cons = generate(G, dsize=dsize, p2=p2, cost_range=(0, maxcost))
 
     print('Creating DCOP instance ' + name, ' G nodes: ', len(G.nodes()), ' G edges:', len(G.edges()))
 
-    dcop.create_xml_instance(name, agts, vars, doms, cons, outfile+'.xml')
-    dcop.create_wcsp_instance(name, agts, vars, doms, cons, outfile+'.wcsp')
-    dcop.create_json_instance(name, agts, vars, doms, cons, outfile+'.json')
-    dcop.create_maxsum_instance(name, agts, vars, doms, cons, outfile+'.maxsum')
-    dcop.create_dalo_instance(name, agts, vars, doms, cons, outfile+'.dalo')
+    dcop.create_xml_instance(name, agts, vars, doms, cons, outfile + '.xml')
+    dcop.create_wcsp_instance(name, agts, vars, doms, cons, outfile + '.wcsp')
+    dcop.create_json_instance(name, agts, vars, doms, cons, outfile + '.json')
+    dcop.create_maxsum_instance(name, agts, vars, doms, cons, outfile + '.maxsum')
+    dcop.create_dalo_instance(name, agts, vars, doms, cons, outfile + '.dalo')

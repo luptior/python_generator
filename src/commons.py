@@ -1,6 +1,7 @@
 import json
 import sys, getopt, os
 
+
 ## Commons I/O
 def makedir(path):
     if not path or os.path.exists(path):

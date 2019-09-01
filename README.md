@@ -4,7 +4,12 @@ Generates examples for DCOP algorithm testing
 
 ## Random Generator
 ```shell script
-python dcop_gen_rand.py --agts 50 --doms 10 --p1 1.0 --p2 0.5 --max_arity 2 --max_cost 100 --name test --ofile test
+python dcop_gen_rand.py --agts 50 \
+                        --doms 10 \
+                        --p1 1.0 --p2 0.5 \
+                        --max_arity 2 \
+                        --max_cost 100 \
+                        --name test --ofile test
 ```
     Parameters:
     agts (int) – the number of nodes
@@ -23,7 +28,12 @@ python dcop_gen_rand.py --agts 50 --doms 10 --p1 1.0 --p2 0.5 --max_arity 2 --ma
 
 ## Grid Generator
 ```shell script
-python dcop_gen_grid.py --agts 50 --doms 10 --p2 0.5 --max_arity 2 --max_cost 100 --name test --ofile test
+python dcop_gen_grid.py --agts 50 \
+                        --doms 10 \
+                        --p2 0.5 \
+                        --max_arity 2 \
+                        --max_cost 100 \
+                        --name test --ofile test
 ```
     Parameters:
     agts (int) – the number of nodes along 1 side of the grid-graph
@@ -40,7 +50,14 @@ python dcop_gen_grid.py --agts 50 --doms 10 --p2 0.5 --max_arity 2 --max_cost 10
 
 ## Scale-Free Generator
 ```shell script
-python dcop_gen_scalefree.py --agts 50 --doms 10 --m 4 --t 0.3 --p2 0.5 --max_arity 2 --max_cost 100 --name test --ofile test
+python dcop_gen_scalefree.py --agts 50 \
+                            --doms 10 \
+                            --m 4 \
+                            --t 0.3 \
+                            --p2 0.5 \
+                            --max_arity 2 \
+                            --max_cost 100 \
+                            --name test --ofile test
 ```
     Parameters:
     agts (int) – the number of nodes

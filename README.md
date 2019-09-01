@@ -65,5 +65,5 @@ python dcop_gen_scalefree.py --agts 50 --doms 10 --m 4 --t 0.3 --p2 0.5 --max_ar
 ```python
 from parser import xml_parse
 
-agents, domains, variables, relations, constraints = xml_parse("/Users/luptior/Desktop/Research_3/python_generator/data/a5_d100_r4.xml")
+agents, domains, variables, relations, constraints = xml_parse("data/a5_d100_r4.xml")
 ```

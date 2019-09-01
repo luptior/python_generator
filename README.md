@@ -11,17 +11,17 @@ python dcop_gen_rand.py --agts 50 \
                         --max_cost 100 \
                         --name test --ofile test
 ```
-    Parameters:
-    agts (int) – the number of nodes
-    doms (int) – the size of the domains
-    p1 (float) – the constraint graph density (0 = disconnected, 1 = fully connected)
-    p2 (float) – the constraint tightness (0 = full soft, 1 = full hard)
-    max_arity (int) – the maximum constraint arity
-    max_cost (int) - the maximum cost of a constraint value
-    name (str) the name of the instance
-    ofile (str) path to the output files
+Parameters:\
+agts (int) – the number of nodes\
+doms (int) – the size of the domains\
+p1 (float) – the constraint graph density (0 = disconnected, 1 = fully connected)\
+p2 (float) – the constraint tightness (0 = full soft, 1 = full hard)\
+max_arity (int) – the maximum constraint arity\
+max_cost (int) - the maximum cost of a constraint value\
+name (str) the name of the instance\
+ofile (str) path to the output files\
 
-    Generates a Random instance according to the above parameters
+Generates a Random instance according to the above parameters
 
 
 
@@ -35,17 +35,17 @@ python dcop_gen_grid.py --agts 50 \
                         --max_cost 100 \
                         --name test --ofile test
 ```
-    Parameters:
-    agts (int) – the number of nodes along 1 side of the grid-graph
-    doms (int) – the size of the domains
-    p2 (float) – the constraint tightness (0 = full soft, 1 = full hard)
-    max_arity (int) – the maximum constraint arity
-    max_cost (int) - the maximum cost of a constraint value
-    name (str) the name of the instance
-    ofile (str) path to the output files
+Parameters:\
+agts (int) – the number of nodes along 1 side of the grid-graph\
+doms (int) – the size of the domains\
+p2 (float) – the constraint tightness (0 = full soft, 1 = full hard)\
+max_arity (int) – the maximum constraint arity\
+max_cost (int) - the maximum cost of a constraint value\
+name (str) the name of the instance\
+ofile (str) path to the output files\
 
 
-    Generate a planar grid graph whose nodes is agts^2
+Generate a planar grid graph whose nodes is agts^2
 
 
 ## Scale-Free Generator
@@ -59,23 +59,23 @@ python dcop_gen_scalefree.py --agts 50 \
                             --max_cost 100 \
                             --name test --ofile test
 ```
-    Parameters:
-    agts (int) – the number of nodes
-    doms (int) – the size of the domains
-    m (int) – the number of random edges to add for each new node
-    t (float) – Probability of adding a triangle after adding a random edge
-    p2 (float) – the constraint tightness (0 = full hard, 1 = full soft)
-    max_arity (int) – the maximum constraint arity
-    max_cost (int) - the maximum cost of a constraint value
-    name (str) the name of the instance
-    ofile (str) path to the output files
+Parameters:\
+agts (int) – the number of nodes\
+doms (int) – the size of the domains\
+m (int) – the number of random edges to add for each new node\
+t (float) – Probability of adding a triangle after adding a random edge\
+p2 (float) – the constraint tightness (0 = full hard, 1 = full soft)\
+max_arity (int) – the maximum constraint arity\
+max_cost (int) - the maximum cost of a constraint value\
+name (str) the name of the instance\
+ofile (str) path to the output files
 
-    Holme and Kim algorithm for growing graphs with powerlaw degree distribution and approximate 
-    average clustering. The average clustering has a hard time getting above a certain cutoff 
-    that depends on m. This cutoff is often quite low. The transitivity (fraction of triangles 
-    to possible triangles) seems to decrease with network size. It is essentially the Barabási–Albert 
-    (BA) growth model with an extra step that each random edge is followed by a chance of making 
-    an edge to one of its neighbors too (and thus a triangle).
+Holme and Kim algorithm for growing graphs with powerlaw degree distribution and approximate 
+average clustering. The average clustering has a hard time getting above a certain cutoff 
+that depends on m. This cutoff is often quite low. The transitivity (fraction of triangles 
+to possible triangles) seems to decrease with network size. It is essentially the Barabási–Albert 
+(BA) growth model with an extra step that each random edge is followed by a chance of making 
+an edge to one of its neighbors too (and thus a triangle).
 
 
 ## Parser

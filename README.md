@@ -51,11 +51,12 @@
     name (str) the name of the instance
     ofile (str) path to the output files
 
-    Holme and Kim algorithm for growing graphs with powerlaw degree distribution and approximate average clustering.
-    The average clustering has a hard time getting above a certain cutoff that depends on m. This cutoff is often
-    quite low. The transitivity (fraction of triangles to possible triangles) seems to decrease with network size.
-    It is essentially the Barabási–Albert (BA) growth model with an extra step that each random edge is followed by
-    a chance of making an edge to one of its neighbors too (and thus a triangle).
+    Holme and Kim algorithm for growing graphs with powerlaw degree distribution and approximate 
+    average clustering. The average clustering has a hard time getting above a certain cutoff 
+    that depends on m. This cutoff is often quite low. The transitivity (fraction of triangles 
+    to possible triangles) seems to decrease with network size. It is essentially the Barabási–Albert 
+    (BA) growth model with an extra step that each random edge is followed by a chance of making 
+    an edge to one of its neighbors too (and thus a triangle).
 
 
 ## Parser

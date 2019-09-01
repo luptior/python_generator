@@ -56,3 +56,13 @@
     quite low. The transitivity (fraction of triangles to possible triangles) seems to decrease with network size.
     It is essentially the Barabási–Albert (BA) growth model with an extra step that each random edge is followed by
     a chance of making an edge to one of its neighbors too (and thus a triangle).
+
+
+## Parser
+```python
+from parser import xml_parse
+
+agents, domains, variables, relations, constraints = xml_parse("/Users/luptior/Desktop/Research_3/python_generator/data/a5_d100_r4.xml")
+
+
+```

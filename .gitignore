@@ -1,7 +1,7 @@
 .gitignore
 *.pyc
 .idea
-.DS__Store
+.DS_Store
 gen.sh
 
 data

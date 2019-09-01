@@ -10,16 +10,16 @@ max_cost=100
 repo_size=10
 
 for rep in $(seq 1 $repo_size); do
-  for n_dom in 100 120 140 160 180 200; do
+  for n_dom in 10; do
     name=$output/"a"${n_agents}"_d"${n_dom}"_r"$rep
     python src/dcop_gen_rand.py --agts $n_agents \
-                            --doms $n_dom \
-                            --p1 $p1 \
-                            --p2 $p2 \
-                            --max_arity $max_arity \
-                            --max_cost $max_cost \
-                            --name $name \
-                            --ofile $name
+                                --doms $n_dom \
+                                --p1 $p1 \
+                                --p2 $p2 \
+                                --max_arity $max_arity \
+                                --max_cost $max_cost \
+                                --name $name \
+                                --ofile $name
   done
 done
 

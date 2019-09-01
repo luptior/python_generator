@@ -1,4 +1,5 @@
 # DCOP_generator
+![PyPI - Python Version](https://img.shields.io/badge/python-≥3-blue.svg)\
 Generates examples for DCOP algorithm testing
 
 ## Random Generator

@@ -64,6 +64,4 @@
 from parser import xml_parse
 
 agents, domains, variables, relations, constraints = xml_parse("/Users/luptior/Desktop/Research_3/python_generator/data/a5_d100_r4.xml")
-
-
 ```

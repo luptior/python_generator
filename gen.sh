@@ -10,7 +10,7 @@ max_arity=2
 max_cost=100
 
 
-for n_dom in $(seq 10 10 200); do
+for n_dom in 5; do
   for rep in $(seq 0 $repo_size); do
     name=$output/random_a${n_agents}_d${n_dom}_r$rep
     python src/dcop_gen_rand.py --agts $n_agents \

@@ -106,13 +106,17 @@ def main(argv):
 if __name__ == '__main__':
     nagts, dsize, p1, p2, maxarity, maxcost, name, outfile = main(sys.argv[1:])
 
-    agts, vars, doms, cons = generate(nagts=nagts, dsize=dsize, p1=p1, p2=p2,
-                                      cost_range=(0, maxcost),
-                                      max_arity=maxarity, def_cost=0)
 
-    if not dcop.sanity_check(vars, cons):
-        print("sanity check failed!")
-        exit(-1)
+
+    while True:
+        agts, vars, doms, cons = generate(nagts=nagts, dsize=dsize, p1=p1, p2=p2,
+                                          cost_range=(0, maxcost),
+                                          max_arity=maxarity, def_cost=0)
+        if dcop.sanity_check(vars, cons):
+            break
+        # if not dcop.sanity_check(vars, cons):
+        #     print("sanity check failed!")
+        #     exit(-1)
 
     print('Creating DCOP instance ' + name)
     dcop.create_xml_instance(name, agts, vars, doms, cons, outfile + '.xml')

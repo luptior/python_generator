@@ -120,7 +120,7 @@ if __name__ == '__main__':
 
     print('Creating DCOP instance ' + name)
     dcop.create_xml_instance(name, agts, vars, doms, cons, outfile + '.xml')
-    dcop.create_wcsp_instance(name, agts, vars, doms, cons, outfile + '.wcsp')
-    dcop.create_json_instance(name, agts, vars, doms, cons, outfile + '.json')
-    dcop.create_maxsum_instance(name, agts, vars, doms, cons, outfile + '.maxsum')
-    dcop.create_dalo_instance(name, agts, vars, doms, cons, outfile + '.dalo')
+    # dcop.create_wcsp_instance(name, agts, vars, doms, cons, outfile + '.wcsp')
+    # dcop.create_json_instance(name, agts, vars, doms, cons, outfile + '.json')
+    # dcop.create_maxsum_instance(name, agts, vars, doms, cons, outfile + '.maxsum')
+    # dcop.create_dalo_instance(name, agts, vars, doms, cons, outfile + '.dalo')

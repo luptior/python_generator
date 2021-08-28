@@ -2,6 +2,12 @@
 ![PyPI - Python Version](https://img.shields.io/badge/python-≥3-blue.svg)\
 Generates examples for DCOP algorithm testing
 
+Should be compatible with Pypy but no thoroughly tested. 
+```shell script
+pypy dcop_gen_rand.py --**flags
+```
+
+
 ## Random Generator
 ```shell script
 python dcop_gen_rand.py --agts 50 \
